@@ -1,0 +1,59 @@
+<html>
+<head><title>delite to Scrapbox script Generator</title></head>
+
+<body style="padding:1em">
+<div id="ScriptTemplate" style="display:none;">
+(function(){
+	const title=window
+        .prompt('Scrap "Scrapbox" to ${projectName}.',document.title)
+        .replace(/^((?:.+?)?) \/ 検索 \/ デライト/, '$1'); /*タイトルをいい感じに変換*/
+    console.assert(!title.empty);
+    
+	if (!title) return;
+    
+    const fromLinkText = `from:[${document.title} ${location.href}]\n\n`;
+    const htmlTexts = fromLinkText+document.querySelector("div.dln").innerHTML;
+    const htmlLines = htmlTexts.split("\n");
+    const scrapboxLines = htmlLines
+        .map(line=>line.replace(/&lt;p(?: .+?)?&gt;(.*?)&lt;\/p&gt;/g, '$1'))/*pタグ削除*/
+        .map(line=>line.replace(/&lt;a(?: .+?)?&gt;(.*?)&lt;\/a&gt;/g, '[$1]'))/*リンクタグ変換*/
+        .map(line=>line.replace(/^(\s*)・/g, ' $1'))/*箇条書きを変換*/
+        .map(line=>line.replace(/^\s*(\n|$)/g, ''))/*スペースのみの行を空行に変換*/
+        .filter(line=>line!="");/*改行のみの行を削除*/
+        
+    const scrapboxTexts = scrapboxLines.join('\n');
+    const body=encodeURIComponent(scrapboxTexts);
+    window.open('${projectUrl}'+encodeURIComponent(title.trim())+'?body='+body);
+})();
+</div>
+
+<label><h2>Input scrapbox project url:</h2>
+    <input id="ScrapboxProjectUrl" type="url" value="https://scrapbox.io/" style="width:100%; margin-bottom:4ex; padding:1em; border-radius:1em; ">
+</label>
+
+<div><h2>Bookmarklet for forwarding Delite's 輪郭 to Scrapbox's page:</h2>
+    <div id="Script" style="padding:1em; height:20ex; border-radius:1em; border:solid 1px;"></div>
+</div>
+
+<script>
+function generatePushDeliteToScrapboxScript(projectUrl, projectName){
+    console.assert(projectName, "projectName is "+projectName);
+    console.assert(projectUrl, "projectUrl is "+projectUrl);
+    return document.querySelector("#ScriptTemplate").innerText
+        .replace("${projectUrl}", projectUrl)
+        .replace("${projectName}", projectName);
+}
+
+const inputElem = document.querySelector('#ScrapboxProjectUrl');
+const scriptElem = document.querySelector('#Script');
+inputElem.addEventListener('input', e=>{
+    const scrapboxProjectUrl = e.target.value;
+    const splitUrl=scrapboxProjectUrl.split("/").filter(line=>line!="")
+    console.log(splitUrl);
+    const scrapboxProjectName = splitUrl[splitUrl.length-1];
+    console.assert(scrapboxProjectName, "scrapboxProjectName:"+scrapboxProjectName);
+    scriptElem.textContent = generatePushDeliteToScrapboxScript(scrapboxProjectUrl, scrapboxProjectName);
+});
+</script>
+</body>
+</html>
