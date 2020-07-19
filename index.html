@@ -17,9 +17,11 @@
     const scrapboxLines = htmlLines
         .map(line=>line.replace(/&lt;p(?: .+?)?&gt;(.*?)&lt;\/p&gt;/g, '$1'))/*pタグ削除*/
         .map(line=>line.replace(/&lt;a(?: .+?)?&gt;(.*?)&lt;\/a&gt;/g, '[$1]'))/*リンクタグ変換*/
+        .map(line=>line.replace(/&lt;blockquote(?: .+?)?&gt;(.*?)&lt;\/blockquote&gt;/g, '>$1'))/*引用タグを変換*/
         .map(line=>line.replace(/^(\s*)・/g, ' $1'))/*箇条書きを変換*/
+        .filter(line=>line!="")/*改行のみの行を削除*/
         .map(line=>line.replace(/^\s*(\n|$)/g, ''))/*スペースのみの行を空行に変換*/
-        .filter(line=>line!="");/*改行のみの行を削除*/
+        ;
         
     const scrapboxTexts = scrapboxLines.join('\n');
     const body=encodeURIComponent(scrapboxTexts);
