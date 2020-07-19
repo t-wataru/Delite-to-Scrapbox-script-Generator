@@ -6,8 +6,6 @@
 (async ()=>{
     const titleOutline = document.querySelector(".mg .ikon").innerText.replace(/{\s*|\}|[\s,\t, ]*$|\n$/g,"").replace(/\n/g," ");
 	const title=window.prompt('Scrap "Scrapbox" to ${projectName}.',titleOutline);
-        /*.replace(/^((?:.+?)?) \/ 検索 \/ デライト/, '$1') /*タイトルをいい感じに変換*/
-        ;
     console.assert(!title.empty);
 
     const queryString = window.location.search;
@@ -19,7 +17,7 @@
 
     const scrapboxLines = srcOutline.split("\n")
         .map(line=>line.replace(/^(\s*)\+?(https?:\/\/[^\s]+)/g, "$1[$2]"))/*外部リンクやメディアリンクにブラケットをつける*/
-        .map(line=>line.replace(/\{/g, "[")).map(line=>line.replace(/\}/g, "]"))/*リンク記法変換 雑変換だけどScrapboxのパーサーも雑なので問題ないはず*/
+        .map(line=>line.replace(/\{|｛/g, "[")).map(line=>line.replace(/\}|｝/g, "]"))/*リンク記法変換 雑変換だけどScrapboxのパーサーも雑なので問題ないはず*/
         .filter(line=>line!="")/*改行のみの行を削除*/
         .map(line=>line.replace(/^\s*(\n|$)/g, ''))/*スペースのみの行を空行に変換*/
         ;
