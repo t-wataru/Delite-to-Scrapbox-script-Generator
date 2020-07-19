@@ -11,8 +11,8 @@
     
 	if (!title) return;
     
-    const fromLinkText = `from:[${document.title} ${location.href}]\n\n`;
-    const htmlTexts = fromLinkText+document.querySelector("div.dln").innerHTML;
+    const fromLinkText = `from:[${document.title} ${location.href}]`;
+    const htmlTexts = document.querySelector("div.dln").innerHTML+" \n \n"+fromLinkText;
     const htmlLines = htmlTexts.split("\n");
     const scrapboxLines = htmlLines
         .map(line=>line.replace(/&lt;p(?: .+?)?&gt;(.*?)&lt;\/p&gt;/g, '$1'))/*pタグ削除*/
