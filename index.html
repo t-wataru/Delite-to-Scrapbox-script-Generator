@@ -4,13 +4,12 @@
 <body style="padding:1em">
 <div id="ScriptTemplate" style="display:none;">
 (function(){
-	const title=window
-        .prompt('Scrap "Scrapbox" to ${projectName}.',document.title)
-        .replace(/^((?:.+?)?) \/ 検索 \/ デライト/, '$1'); /*タイトルをいい感じに変換*/
+    const outlineTitle = document.querySelector(".mg .ikon").innerText.replace(/{\s*|\}|[\s,\t, ]*$|\n$/g,"").replace(/\n/g," ");
+	const title=window.prompt('Scrap "Scrapbox" to ${projectName}.',outlineTitle);
+        /*.replace(/^((?:.+?)?) \/ 検索 \/ デライト/, '$1') /*タイトルをいい感じに変換*/
+        ;
     console.assert(!title.empty);
-    
-	if (!title) return;
-    
+
     const fromLinkText = `from:[${document.title} ${location.href}]`;
     const htmlTexts = document.querySelector("div.dln").innerHTML+" \n \n"+fromLinkText;
     const htmlLines = htmlTexts.split("\n");
@@ -46,6 +45,8 @@ function generatePushDeliteToScrapboxScript(projectUrl, projectName){
         .replace("${projectName}", projectName);
 }
 
+
+
 const inputElem = document.querySelector('#ScrapboxProjectUrl');
 const scriptElem = document.querySelector('#Script');
 inputElem.addEventListener('input', e=>{
@@ -59,3 +60,4 @@ inputElem.addEventListener('input', e=>{
 </script>
 </body>
 </html>
+
