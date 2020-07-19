@@ -3,21 +3,23 @@
 
 <body style="padding:1em">
 <div id="ScriptTemplate" style="display:none;">
-(function(){
-    const outlineTitle = document.querySelector(".mg .ikon").innerText.replace(/{\s*|\}|[\s,\t, ]*$|\n$/g,"").replace(/\n/g," ");
-	const title=window.prompt('Scrap "Scrapbox" to ${projectName}.',outlineTitle);
+(async ()=>{
+    const titleOutline = document.querySelector(".mg .ikon").innerText.replace(/{\s*|\}|[\s,\t, ]*$|\n$/g,"").replace(/\n/g," ");
+	const title=window.prompt('Scrap "Scrapbox" to ${projectName}.',titleOutline);
         /*.replace(/^((?:.+?)?) \/ 検索 \/ デライト/, '$1') /*タイトルをいい感じに変換*/
         ;
     console.assert(!title.empty);
 
-    const fromLinkText = `from:[${document.title} ${location.href}]`;
-    const htmlTexts = document.querySelector("div.dln").innerHTML+" \n \n"+fromLinkText;
-    const htmlLines = htmlTexts.split("\n");
-    const scrapboxLines = htmlLines
-        .map(line=>line.replace(/&lt;p(?: .+?)?&gt;(.*?)&lt;\/p&gt;/g, '$1'))/*pタグ削除*/
-        .map(line=>line.replace(/&lt;a(?: .+?)?&gt;(.*?)&lt;\/a&gt;/g, '[$1]'))/*リンクタグ変換*/
-        .map(line=>line.replace(/&lt;blockquote(?: .+?)?&gt;(.*?)&lt;\/blockquote&gt;/g, '>$1'))/*引用タグを変換*/
-        .map(line=>line.replace(/^(\s*)・/g, ' $1'))/*箇条書きを変換*/
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const fgParam=urlParams.get("fg");
+    const querySrcUrl=`/${fgParam}?dln&fmt=src`;
+    const srcOutline = await $.get(querySrcUrl);
+    console.assert(srcOutline);
+
+    const scrapboxLines = srcOutline.split("\n")
+        .map(line=>line.replace(/^(\s*)\+?(https?:\/\/[^\s]+)/g, "$1[$2]"))/*外部リンクやメディアリンクにブラケットをつける*/
+        .map(line=>line.replace(/\{/g, "[")).map(line=>line.replace(/\}/g, "]"))/*リンク記法変換 雑変換だけどScrapboxのパーサーも雑なので問題ないはず*/
         .filter(line=>line!="")/*改行のみの行を削除*/
         .map(line=>line.replace(/^\s*(\n|$)/g, ''))/*スペースのみの行を空行に変換*/
         ;
@@ -49,14 +51,16 @@ function generatePushDeliteToScrapboxScript(projectUrl, projectName){
 
 const inputElem = document.querySelector('#ScrapboxProjectUrl');
 const scriptElem = document.querySelector('#Script');
-inputElem.addEventListener('input', e=>{
-    const scrapboxProjectUrl = e.target.value;
+const generateBookmarklet=(scrapboxProjectUrl)=>{
     const splitUrl=scrapboxProjectUrl.split("/").filter(line=>line!="")
     console.log(splitUrl);
     const scrapboxProjectName = splitUrl[splitUrl.length-1];
     console.assert(scrapboxProjectName, "scrapboxProjectName:"+scrapboxProjectName);
     scriptElem.textContent = generatePushDeliteToScrapboxScript(scrapboxProjectUrl, scrapboxProjectName);
-});
+}
+inputElem.addEventListener('input', e=>generateBookmarklet(e.target.value));
+console.log(inputElem.value);
+generateBookmarklet(inputElem.value);
 </script>
 </body>
 </html>
