@@ -4,7 +4,7 @@
 <body style="padding:1em">
 <div id="ScriptTemplate" style="display:none;">
 (async ()=>{
-    const titleOutline = document.querySelector(".mg .ikon").innerText.replace(/{\s*|\}|[\s,\t, ]*$|\n$/g,"").replace(/\n/g," ");
+    const titleOutline = document.querySelector(".mg .ikon .knm").innerText;
 	const title=window.prompt('Scrap "Scrapbox" to ${projectName}.',titleOutline);
     console.assert(!title.empty);
 
@@ -22,7 +22,7 @@
         .map(line=>line.replace(/^\s*(\n|$)/g, ''))/*スペースのみの行を空行に変換*/
         ;
     const scrapboxTexts = scrapboxLines.join('\n');
-    const body=encodeURIComponent(scrapboxTexts);
+    const body=encodeURIComponent(`${scrapboxTexts}\n\nfrom: ${location.href}`);
     window.open('${projectUrl}'+encodeURIComponent(title.trim())+'?body='+body);
 })();
 </div>
