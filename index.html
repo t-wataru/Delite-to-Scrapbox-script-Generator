@@ -56,7 +56,6 @@ const generateBookmarklet=(scrapboxProjectUrl)=>{
     linkElem.href = `javascript:${pushDeliteToScrapboxScript}`;
 }
 inputElem.addEventListener('input', e=>generateBookmarklet(e.target.value));
-console.log(inputElem.value);
 generateBookmarklet(inputElem.value);
 </script>
 </body>
