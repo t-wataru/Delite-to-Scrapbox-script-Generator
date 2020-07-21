@@ -31,7 +31,7 @@
     <input id="ScrapboxProjectUrl" type="url" value="https://scrapbox.io/" style="width:100%; margin-bottom:4ex; padding:1em; border-radius:1em; ">
 </label>
 
-<div><h2>Bookmarklet for forwarding Delite's 輪郭 to Scrapbox's page:</h2>
+<div><h2>Bookmarklet for forwarding Delite's 輪郭 to Scrapbox's page:</h2><a href="" id="BookmarkletLink">Delite to Scrapbox</a>
     <div id="Script" style="padding:1em; height:20ex; border-radius:1em; border:solid 1px;"></div>
 </div>
 
@@ -44,16 +44,17 @@ function generatePushDeliteToScrapboxScript(projectUrl, projectName){
         .replace("${projectName}", projectName);
 }
 
-
-
 const inputElem = document.querySelector('#ScrapboxProjectUrl');
 const scriptElem = document.querySelector('#Script');
+const linkElem = document.querySelector('#BookmarkletLink')
 const generateBookmarklet=(scrapboxProjectUrl)=>{
     const splitUrl=scrapboxProjectUrl.split("/").filter(line=>line!="")
     console.log(splitUrl);
     const scrapboxProjectName = splitUrl[splitUrl.length-1];
     console.assert(scrapboxProjectName, "scrapboxProjectName:"+scrapboxProjectName);
-    scriptElem.textContent = generatePushDeliteToScrapboxScript(scrapboxProjectUrl, scrapboxProjectName);
+    const pushDeliteToScrapboxScript = generatePushDeliteToScrapboxScript(scrapboxProjectUrl, scrapboxProjectName);
+    scriptElem.textContent = pushDeliteToScrapboxScript;
+    linkElem.href = `javascript:${pushDeliteToScrapboxScript}`;
 }
 inputElem.addEventListener('input', e=>generateBookmarklet(e.target.value));
 console.log(inputElem.value);
