@@ -49,7 +49,6 @@ const scriptElem = document.querySelector('#Script');
 const linkElem = document.querySelector('#BookmarkletLink')
 const generateBookmarklet=(scrapboxProjectUrl)=>{
     const splitUrl=scrapboxProjectUrl.split("/").filter(line=>line!="")
-    console.log(splitUrl);
     const scrapboxProjectName = splitUrl[splitUrl.length-1];
     console.assert(scrapboxProjectName, "scrapboxProjectName:"+scrapboxProjectName);
     const pushDeliteToScrapboxScript = generatePushDeliteToScrapboxScript(scrapboxProjectUrl, scrapboxProjectName);
