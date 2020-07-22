@@ -23,7 +23,8 @@
         ;
     const scrapboxTexts = scrapboxLines.join('\n');
     const body=encodeURIComponent(`${scrapboxTexts}\n\nfrom: ${location.href}`);
-    window.open('${projectUrl}'+encodeURIComponent(title.trim())+'?body='+body);
+    const projectUrl = '${projectUrl}'.replace(/\/$/g, "")+"/";
+    window.open(projectUrl+encodeURIComponent(title.trim())+'?body='+body);
 })();
 </div>
 
